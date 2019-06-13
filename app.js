@@ -8,6 +8,18 @@ app.use(cookieParser());
 
 app.set("view engine", "pug");
 
+// app.use((req, res, next) => {
+//   console.log("Hello")
+//   const err = new Error('Oh fuck!');
+//   err.status = 500;
+//   next(err);
+// });
+
+app.use((req, res, next) => {
+  console.log("world!");
+  next();
+});
+
 app.get("/", (req, res) => {
   const name = req.cookies.username 
   if (name) {
@@ -42,6 +54,18 @@ app.get("/hello", (req, res) => {
   } else {
     res.render('hello');
   }
+});
+
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.locals.error = err;
+  res.status(err.status);
+  res.render('error')
 });
 
 
